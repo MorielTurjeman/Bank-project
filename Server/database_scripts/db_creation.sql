@@ -6,11 +6,13 @@ USE bank;
 -- );
 -- CREATE TABLE transactions(
 --     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--     user_id INT NOT NULL,
 --     vendor VARCHAR(50),
---     amount FLOAT DEFAULT 0,
+--     amount FLOAT NOT NULL,
 --     category_name VARCHAR(20),
 --     is_deleted BIT DEFAULT false,
---     FOREIGN KEY(category_name) REFERENCES category(name)
+--     FOREIGN KEY(category_name) REFERENCES category(name),
+--     FOREIGN KEY(user_id) REFERENCES user(id)
 -- );
 
 -- CREATE TABLE USER(
@@ -20,9 +22,36 @@ USE bank;
 --     current_balance FLOAT
 -- );
 
--- drop TABLE category;
+-- drop TABLE transactions;
 
 
--- insert into category(name) values('food');
+
+-- delete  from transactions where id=13;
+-- Select * from transactions where is_deleted=1;
 -- Select * from category;
 -- delete  from category where name='food';
+-- INSERT into category( name) values('Gym');
+-- INSERT into category( name) values('Tax');
+
+
+
+-- delete from transactions where id=3;
+insert into transactions(id,user_id, vendor, amount, category_name, is_deleted) values(null,1, 'trainer', 100, 'Gym', 0);
+-- Select * from transactions where is_deleted=1;
+
+-- update transactions set is_deleted=0 where id=4; 
+-- Select * from transactions where category_name='Tax'; 
+-- select * from transactions where is_deleted=false;
+select * from transactions;
+
+-- Select current_balance from user;
+
+-- insert into user(id, first_name, last_name, current_balance) values(null, "Avi", "Eyal", 100);
+-- select * from user; 
+
+-- update user set current_balance=current_balance+50;
+-- select * from user; 
+
+-- select SUM(amount), category_name from transactions where is_deleted='false' group by category_name ;
+-- Select current_balance from user where id=1;
+-- select SUM(amount) as amount, category_name from transactions where is_deleted='false' group by category_name;

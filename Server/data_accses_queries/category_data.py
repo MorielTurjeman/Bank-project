@@ -4,7 +4,7 @@ from models.category import Category
 
 def create_category(name):
     try:
-        with connection.cursor as cursor:
+        with connection.cursor() as cursor:
             create_category = f"INSERT into category( name) values('{name}')"
             cursor.execute(create_category)
             connection.commit()
@@ -33,7 +33,6 @@ def get_categories():
             get_category = f"Select * from category"
             cursor.execute(get_category)
             results = cursor.fetchall()
-            print(results)
             categories: list[Category] = []
             for result in results:
                 categories.append(Category(result['name']))
@@ -44,12 +43,12 @@ def get_categories():
         raise ValueError('Cannot get categorys')
 
 
-def delete_category(name):
-    try:
-        with connection.cursor() as cursor:
-            delete_query = f"delete  from category where name='{name}'"
-            cursor.execute(delete_query)
-            connection.commit()
-    except RuntimeError as e:
-        print(e)
-        raise ValueError(f"'Cannot delete category{name}'")
+# def delete_category(name):
+#     try:
+#         with connection.cursor() as cursor:
+#             delete_query = f"delete  from category where name='{name}'"
+#             cursor.execute(delete_query)
+#             connection.commit()
+#     except RuntimeError as e:
+#         print(e)
+#         raise ValueError(f"'Cannot delete category{name}'")
