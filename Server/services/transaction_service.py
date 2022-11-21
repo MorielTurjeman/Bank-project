@@ -12,17 +12,19 @@ from services import user_service
 def add_transaction(transaction: dict):
     transaction['user_id'] = user_service.get_logged_in_user()
     transaction['is_deleted'] = False
-    t = transaction_data.create_transaction(transaction)
-    user_service.update_balance(t.user_id, t.amount)
-    print(t)
-    return t
+    new_transaction = transaction_data.create_transaction(transaction)
+    user_service.update_balance(
+        new_transaction.user_id, new_transaction.amount)
+    print(new_transaction)
+    return new_transaction
 
 
 def delete_transaction(transaction_id):
-    t = transaction_data.get_transaction_by_id(transaction_id)
-    if t:
+    transaction = transaction_data.get_transaction_by_id(transaction_id)
+    if transaction:
         transaction_data.delete_transaction(transaction_id)
-        user_service.update_balance(t[0].user_id, t[0].amount*-1)
+        user_service.update_balance(
+            transaction[0].user_id, transaction[0].amount*-1)
     else:
         raise ValueNotFoundError(
             f"Could not find transaction id {transaction_id}")

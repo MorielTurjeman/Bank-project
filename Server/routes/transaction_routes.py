@@ -1,13 +1,31 @@
 from fastapi import APIRouter, Request, status, HTTPException
 from exeptions.value_not_found_error import ValueNotFoundError
 from services import transaction_service
+from services import category_service
 
 
 router = APIRouter(prefix='/transactions')
 
-# class MyClass(BaseModel):
-#     name: str
-#     id: int
+# Throws error if validation failes, or returns if everything is ok
+
+
+def validate_input(vendor, amount, category_name):
+    if not (vendor and type(vendor) == str):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for vendor field")
+
+    if not (amount and type(amount) in [float, int]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for amount field")
+        # TODO: Add test to check if category is in the db
+
+    if not (category_name and type(category_name) == str):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for category field")
+
+    if not category_service.is_in_categories(category_name):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Category does not exist")
 
 
 @router.post("/", status_code=201)
@@ -16,16 +34,9 @@ async def add_transaction(request: Request):
     vendor = body.get('vendor')
     amount = body.get('amount')
     category_name = body.get('category_name')
-    if not (vendor and type(vendor) == str):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for vendor field")
-    if not (amount and (type(amount) == float or type(amount) == int)):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for amount field")
-        # TODO: Add test to check if category is in the db
-    if not (category_name and type(category_name) == str):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for category field")
+
+    validate_input(vendor, amount, category_name)
+
     try:
         return (transaction_service.add_transaction(body))
     except RuntimeError as err:

@@ -10,9 +10,7 @@ import React, { useState, useEffect } from 'react';
 import DropDown from '../components/dropDown';
 import TransactionsApi from '../data/transactionsApi';
 import { isNegative, isNotNumber, isStringEmpty } from '../utils/validations';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+
 
 export const DEPOSIT = 1
 export const WITHDRAW = -1
