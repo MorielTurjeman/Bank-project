@@ -14,7 +14,7 @@ function Transaction(props) {
         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
     >
         <TableCell align="right">
-            <StatusChip isStatusGreen={props.row.amount < 0} greenLabel={"Withdraw"} redLabel={"Deposit"} />
+            <StatusChip isStatusGreen={props.row.amount > 0} greenLabel={"Deposit"} redLabel={"Withdraw"} />
         </TableCell>
         <TableCell align="right">{row.vendor}</TableCell>
         <TableCell align="right">{row.amount}</TableCell>

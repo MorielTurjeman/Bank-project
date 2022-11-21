@@ -4,6 +4,7 @@ from models.category import Category
 
 def create_category(name):
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
             create_category = f"INSERT into category( name) values('{name}')"
             cursor.execute(create_category)
@@ -29,6 +30,7 @@ def create_category(name):
 
 def get_categories():
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
             get_category = f"Select * from category"
             cursor.execute(get_category)

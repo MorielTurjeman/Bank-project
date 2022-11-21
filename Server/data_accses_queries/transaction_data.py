@@ -16,6 +16,7 @@ from models.transaction_sum import Transaction_Sum
 
 def create_transaction(transaction: dict):
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
             create_transaction = f"INSERT into transactions(id,user_id, vendor, amount, category_name, is_deleted) values(null,{transaction['user_id']}, '{transaction['vendor']}', '{transaction['amount']}', '{transaction['category_name']}',{transaction['is_deleted']} )"
             cursor.execute(create_transaction)
@@ -26,10 +27,11 @@ def create_transaction(transaction: dict):
         raise ValueError(f'Cannot create transaction')
 
 
-def get_transactions():
+def get_transactions(user_id):
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
-            query = "select * from transactions where is_deleted=false"
+            query = f"select * from transactions where is_deleted=false and user_id={user_id}"
             cursor.execute(query)
             results = cursor.fetchall()
             transaction: list[Transaction] = []
@@ -42,22 +44,24 @@ def get_transactions():
         raise ValueError('Cannot get transactions')
 
 
-def delete_transaction(id):
+def delete_transaction(transaction_id, user_id):
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
-            delete_transaction = f"update transactions set is_deleted=1 where id={id}"
+            delete_transaction = f"update transactions set is_deleted=1 where id={transaction_id} and user_id={user_id}"
             cursor.execute(delete_transaction)
             connection.commit()
             # return {'message': 'transaction deleted'}
     except RuntimeError as e:
         print(e)
-        raise ValueError(f'Cannot delete transaction id={id}')
+        raise ValueError(f'Cannot delete transaction id={transaction_id}')
 
 
-def get_transactions_by_category(category_name):
+def get_transactions_by_category(category_name, user_id):
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
-            query = f"Select * from transactions where category_name ='{category_name}'"
+            query = f"Select * from transactions where category_name ='{category_name}' and is_deleted='false' and user_id={user_id}"
             cursor.execute(query)
             results = cursor.fetchall()
             transaction: list[Transaction] = []
@@ -71,10 +75,11 @@ def get_transactions_by_category(category_name):
             f'Cannot get {category_name} transactions')
 
 
-def sum_transactions_by_category():
+def sum_transactions_by_category(user_id):
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
-            sum_query = "select SUM(amount) as amount, category_name from transactions where is_deleted='false' group by category_name"
+            sum_query = f"select SUM(amount) as amount, category_name from transactions where is_deleted='false' and user_id={user_id} group by category_name"
             cursor.execute(sum_query)
             results = cursor.fetchall()
             transaction_breakdown: list[Transaction_Sum] = []
@@ -87,10 +92,11 @@ def sum_transactions_by_category():
         raise ValueError('Cannot get transactions sum')
 
 
-def get_transaction_by_id(id):
+def get_transaction_by_id(transaction_id, user_id):
     try:
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
-            query = f"select * from transactions where id={id}"
+            query = f"select * from transactions where id={transaction_id} and is_deleted='false' and user_id={user_id}"
             cursor.execute(query)
             results = cursor.fetchall()
             transaction: list[Transaction] = []
@@ -100,4 +106,5 @@ def get_transaction_by_id(id):
             return transaction
     except RuntimeError as e:
         print(e)
-        raise ValueError(f'Cannot get transaction id={id}')
+        raise ValueError(
+            f'Cannot get transaction id={transaction_id, user_id}')

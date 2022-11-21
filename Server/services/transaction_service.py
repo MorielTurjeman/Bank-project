@@ -9,8 +9,8 @@ from services import user_service
 #     transaction_data.create_transaction(transaction_from_user)
 
 
-def add_transaction(transaction: dict):
-    transaction['user_id'] = user_service.get_logged_in_user()
+def add_transaction(transaction: dict, user_id):
+    transaction['user_id'] = user_id
     transaction['is_deleted'] = False
     new_transaction = transaction_data.create_transaction(transaction)
     user_service.update_balance(
@@ -19,10 +19,11 @@ def add_transaction(transaction: dict):
     return new_transaction
 
 
-def delete_transaction(transaction_id):
-    transaction = transaction_data.get_transaction_by_id(transaction_id)
+def delete_transaction(transaction_id, user_id):
+    transaction = transaction_data.get_transaction_by_id(
+        transaction_id, user_id)
     if transaction:
-        transaction_data.delete_transaction(transaction_id)
+        transaction_data.delete_transaction(transaction_id, user_id)
         user_service.update_balance(
             transaction[0].user_id, transaction[0].amount*-1)
     else:
@@ -30,16 +31,17 @@ def delete_transaction(transaction_id):
             f"Could not find transaction id {transaction_id}")
 
 
-def get_transactions():
-    transactions = transaction_data.get_transactions()
+def get_transactions(user_id):
+    transactions = transaction_data.get_transactions(user_id)
     return transactions
 
 
-def get_transactions_by_category(category_name):
-    transactions = transaction_data.get_transactions_by_category(category_name)
+def get_transactions_by_category(category_name, user_id):
+    transactions = transaction_data.get_transactions_by_category(
+        category_name, user_id)
     return transactions
 
 
-def sum_transactions_by_category():
-    sum_transactions = transaction_data.sum_transactions_by_category()
+def sum_transactions_by_category(user_id):
+    sum_transactions = transaction_data.sum_transactions_by_category(user_id)
     return sum_transactions

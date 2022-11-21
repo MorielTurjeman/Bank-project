@@ -22,8 +22,6 @@ function Breakdowns(props) {
             })
     }
 
-    console.log(breakdowns)
-
     useEffect(() => { getBreakDowns() }, [])
 
     return (

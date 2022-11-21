@@ -2,9 +2,19 @@ from fastapi import APIRouter, Request, status, HTTPException
 from exeptions.value_not_found_error import ValueNotFoundError
 from services import transaction_service
 from services import category_service
+from services import user_service
 
 
 router = APIRouter(prefix='/transactions')
+
+
+def get_connected_user():
+    user_id = user_service.get_logged_in_user()
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User not logged in")
+
+    return user_id
 
 # Throws error if validation failes, or returns if everything is ok
 
@@ -34,11 +44,11 @@ async def add_transaction(request: Request):
     vendor = body.get('vendor')
     amount = body.get('amount')
     category_name = body.get('category_name')
+    user_id = get_connected_user()
 
     validate_input(vendor, amount, category_name)
-
     try:
-        return (transaction_service.add_transaction(body))
+        return (transaction_service.add_transaction(body, user_id))
     except RuntimeError as err:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected server error, error={err}")
@@ -46,8 +56,9 @@ async def add_transaction(request: Request):
 
 @router.put("/{id}", status_code=204)
 def delete_transaction(id):
+    user_id = get_connected_user()
     try:
-        transaction_service.delete_transaction(id)
+        transaction_service.delete_transaction(id, user_id)
     except RuntimeError as err:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Unexpected server error, error={err}")
@@ -59,8 +70,9 @@ def delete_transaction(id):
 
 @router.get("/", status_code=201)
 def get_transactions():
+    user_id = get_connected_user()
     try:
-        return transaction_service.get_transactions()
+        return transaction_service.get_transactions(user_id)
     except RuntimeError as err:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Unexpected server error, error={err}")
@@ -68,8 +80,9 @@ def get_transactions():
 
 @router.get("/breakdowns", status_code=201)
 def sum_transactions_by_category():
+    user_id = get_connected_user()
     try:
-        return transaction_service.sum_transactions_by_category()
+        return transaction_service.sum_transactions_by_category(user_id)
     except RuntimeError as err:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Unexpected server error, error={err}")
@@ -77,8 +90,9 @@ def sum_transactions_by_category():
 
 @router.get("/{category_name}", status_code=201)
 def get_transactions_by_category(category_name):
+    user_id = get_connected_user()
     try:
-        return transaction_service.get_transactions_by_category(category_name)
+        return transaction_service.get_transactions_by_category(category_name, user_id)
     except RuntimeError as err:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Unexpected server error, error={err}")

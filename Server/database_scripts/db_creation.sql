@@ -30,19 +30,20 @@ USE bank;
 -- Select * from transactions where is_deleted=1;
 -- Select * from category;
 -- delete  from category where name='food';
--- INSERT into category( name) values('Gym');
--- INSERT into category( name) values('Tax');
+-- INSERT into category( name) values('Fun');
+-- INSERT into category( name) values('Education');
+-- INSERT into category( name) values('Travel');
+-- INSERT into category( name) values('Insurance');
 
 
 
 -- delete from transactions where id=3;
-insert into transactions(id,user_id, vendor, amount, category_name, is_deleted) values(null,1, 'trainer', 100, 'Gym', 0);
+-- insert into transactions(id,user_id, vendor, amount, category_name, is_deleted) values(null,1, 'trainer', 100, 'Gym', 0);
 -- Select * from transactions where is_deleted=1;
 
 -- update transactions set is_deleted=0 where id=4; 
--- Select * from transactions where category_name='Tax'; 
+-- Select * from transactions where category_name='Fun'; 
 -- select * from transactions where is_deleted=false;
-select * from transactions;
 
 -- Select current_balance from user;
 
@@ -55,3 +56,7 @@ select * from transactions;
 -- select SUM(amount), category_name from transactions where is_deleted='false' group by category_name ;
 -- Select current_balance from user where id=1;
 -- select SUM(amount) as amount, category_name from transactions where is_deleted='false' group by category_name;
+
+-- Select * from transactions where category_name ='Tax' and is_deleted='false' and user_id=1;
+-- select * from transactions where id=18 and is_deleted='false' and user_id=1;
+select * from category;

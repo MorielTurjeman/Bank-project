@@ -43,7 +43,7 @@ function Transactions(props) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {transactions.map((row) => <Transaction row={row} deleteTransaction={deleteTransaction} />)}
+                    {transactions.map((row) => <Transaction key={row.id} row={row} deleteTransaction={deleteTransaction} />)}
                 </TableBody>
             </Table>
         </TableContainer >
