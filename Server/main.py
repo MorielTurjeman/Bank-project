@@ -24,13 +24,14 @@ app.include_router(category_routes.router)
 app.include_router(user_routes.router)
 
 
-app = FastAPI()
+# app = FastAPI()
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
     "http://localhost",
-    "http://localhost:8080",
+    "http://localhost:8000",
+    "http://localhost:3000",
+    "http://localhost:3001",
+
 ]
 
 app.add_middleware(

@@ -10,24 +10,25 @@ import Transaction from './transaction';
 import React, { useState, useEffect } from 'react';
 import TransactionsApi from '../data/transactionsApi'
 
-
-
-function createData(Vendor, Amount, Category) {
-    return { Vendor, Amount, Category };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
 function Transactions() {
-    useEffect(() => {
-        TransactionsApi.getTransactions().then(transactions => console.log(transactions))
-    })
+    const [transactions, setTransactions] = useState([])
+    const [shouldReload, setShouldReload] = useState(true)
+
+    const getTransactions = () => {
+        if (shouldReload) {
+            TransactionsApi.getTransactions()
+                .then(transactions => setTransactions(transactions))
+                .then(() => setShouldReload(false))
+                .catch((err) => {
+                    console.error(err)
+                })
+        }
+
+
+    }
+    useEffect(() => { getTransactions() }, [shouldReload])
+
+    const deleteTransaction = (id) => { TransactionsApi.deleteTransaction(id).then(() => setShouldReload(true)) }
 
     return (
         <TableContainer component={Paper}>
@@ -37,12 +38,12 @@ function Transactions() {
                         <TableCell align="right">Date</TableCell>
                         <TableCell align="right">Vendor</TableCell>
                         <TableCell align="right">Amount</TableCell>
-                        <TableCell align="right">Category</TableCell>
+                        <TableCell align="right">Category </TableCell>
                         <TableCell align="right"></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {row.map((row) => <Transaction row={row} />)}
+                    {transactions.map((row) => <Transaction row={row} deleteTransaction={deleteTransaction} />)}
                 </TableBody>
             </Table>
         </TableContainer >

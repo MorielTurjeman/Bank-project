@@ -3,9 +3,11 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TransactionsApi from '../data/transactionsApi';
 
 
 function Transaction(props) {
+
     const { row } = props
     return (<TableRow
         key={row.name}
@@ -14,10 +16,10 @@ function Transaction(props) {
         <TableCell component="th" scope="row">
             {row.name}
         </TableCell>
-        <TableCell align="right">{row.Vendor}</TableCell>
-        <TableCell align="right">{row.Amount}</TableCell>
-        <TableCell align="right">{row.Category}</TableCell>
-        <TableCell align="right"><Button variant="outlined" startIcon={<DeleteIcon />}>
+        <TableCell align="right">{row.vendor}</TableCell>
+        <TableCell align="right">{row.amount}</TableCell>
+        <TableCell align="right">{row.category_name}</TableCell>
+        <TableCell align="right"><Button variant="outlined" onClick={() => props.deleteTransaction(row.id)} startIcon={<DeleteIcon />}>
             Delete
         </Button></TableCell>
     </TableRow>)
