@@ -6,11 +6,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Transaction from './transaction';
+import Transaction from '../components/transaction';
 import React, { useState, useEffect } from 'react';
 import TransactionsApi from '../data/transactionsApi'
 
-function Transactions() {
+function Transactions(props) {
     const [transactions, setTransactions] = useState([])
     const [shouldReload, setShouldReload] = useState(true)
 
@@ -28,16 +28,16 @@ function Transactions() {
     }
     useEffect(() => { getTransactions() }, [shouldReload])
 
-    const deleteTransaction = (id) => { TransactionsApi.deleteTransaction(id).then(() => setShouldReload(true)) }
+    const deleteTransaction = (id) => { TransactionsApi.deleteTransaction(id).then(() => setShouldReload(true)).then(() => props.setShouldReloadBalance(true)) }
 
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell align="right">Date</TableCell>
+                        <TableCell align="right">Type</TableCell>
                         <TableCell align="right">Vendor</TableCell>
-                        <TableCell align="right">Amount</TableCell>
+                        <TableCell align="right">Amount ₪</TableCell>
                         <TableCell align="right">Category </TableCell>
                         <TableCell align="right"></TableCell>
                     </TableRow>

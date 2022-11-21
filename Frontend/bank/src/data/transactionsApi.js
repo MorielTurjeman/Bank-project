@@ -23,4 +23,5 @@ export default class TransactionsApi {
         const braekDowns = await axios.get('http://localhost:8000/transactions/breakdowns')
         return braekDowns.data
     }
+
 }

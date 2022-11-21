@@ -10,11 +10,14 @@ import React, { useState, useEffect } from 'react';
 import DropDown from '../components/dropDown';
 import TransactionsApi from '../data/transactionsApi';
 import { isNegative, isNotNumber, isStringEmpty } from '../utils/validations';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 export const DEPOSIT = 1
 export const WITHDRAW = -1
 
-function Oparetions() {
+function Oparetions(props) {
     const [categories, setCategories] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('')
     const [amount, setAmount] = useState(0)
@@ -38,7 +41,7 @@ function Oparetions() {
             setVendor("")
             setAmount(0)
             setSelectedCategory('')
-        })
+        }).then(() => props.setShouldReloadBalance(true))
     }
 
     return (
@@ -93,6 +96,7 @@ function Oparetions() {
                 </Box>
             </CardContent>
         </Card>
+
 
 
 

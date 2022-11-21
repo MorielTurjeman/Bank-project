@@ -22,6 +22,7 @@ async def add_transaction(request: Request):
     if not (amount and (type(amount) == float or type(amount) == int)):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for amount field")
+        # TODO: Add test to check if category is in the db
     if not (category_name and type(category_name) == str):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or missing value for category field")

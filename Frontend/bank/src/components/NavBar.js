@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,15 +14,16 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
 import LinkButton from './LinkButton';
+import UserApi from '../data/userApi';
 
 
 
 const pages = ['Transactions', 'Operations', 'Breakdowns'];
 
 
-export default function NavBar() {
+
+export default function NavBar(props) {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -32,7 +33,6 @@ export default function NavBar() {
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
-
 
     return (
         <AppBar position="static">
@@ -48,7 +48,7 @@ export default function NavBar() {
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Typography size>
-                            Balance:
+                            Balance:{props.balance}₪
                         </Typography>
                     </Box>
                 </Toolbar>
