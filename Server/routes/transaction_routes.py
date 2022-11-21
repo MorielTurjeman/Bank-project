@@ -54,7 +54,7 @@ async def add_transaction(request: Request):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected server error, error={err}")
 
 
-@router.put("/{id}", status_code=204)
+@router.delete("/{id}", status_code=204)
 def delete_transaction(id):
     user_id = get_connected_user()
     try:
@@ -96,3 +96,19 @@ def get_transactions_by_category(category_name):
     except RuntimeError as err:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Unexpected server error, error={err}")
+
+
+@router.put("/{id}", status_code=201)
+async def update_transaction(request: Request):
+    body = await request.json()
+    vendor = body.get('vendor')
+    amount = body.get('amount')
+    category_name = body.get('category_name')
+    user_id = get_connected_user()
+
+    validate_input(vendor, amount, category_name)
+    try:
+        return (transaction_service.update_transaction(body))
+    except RuntimeError as err:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected server error, error={err}")

@@ -45,3 +45,16 @@ def get_transactions_by_category(category_name, user_id):
 def sum_transactions_by_category(user_id):
     sum_transactions = transaction_data.sum_transactions_by_category(user_id)
     return sum_transactions
+
+
+def update_transaction(transaction: dict):
+    original_transaction = transaction_data.get_transaction_by_id(
+        transaction['id'], transaction['user_id'])
+    if original_transaction:
+        new_transaction = transaction_data.update_transactions(transaction)
+        user_service.update_balance(
+            original_transaction[0].user_id, original_transaction[0].amount*(-1) + transaction['amount'])
+        return new_transaction
+    else:
+        raise ValueNotFoundError(
+            f"Could not update transaction id {transaction['id']}")

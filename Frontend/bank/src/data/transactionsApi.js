@@ -9,7 +9,7 @@ export default class TransactionsApi {
     }
 
     static async deleteTransaction(id) {
-        const transactionToDelete = await axios.put(`${TRANSACTION_API}/${id}`)
+        const transactionToDelete = await axios.delete(`${TRANSACTION_API}/${id}`)
     }
 
     static async addTransaction(vendor, amount, category_name) {

@@ -108,3 +108,16 @@ def get_transaction_by_id(transaction_id, user_id):
         print(e)
         raise ValueError(
             f'Cannot get transaction id={transaction_id, user_id}')
+
+
+def update_transactions(transaction: dict):
+    try:
+        connection.ping(reconnect=True)
+        with connection.cursor() as cursor:
+            update_transaction = f"update transactions set vendor = '{transaction['vendor']}', amount = {transaction['amount']} , category_name = '{transaction['category_name']}' where id = {transaction['id']}"
+            cursor.execute(update_transaction)
+            connection.commit()
+            return Transaction(transaction['id'], transaction['user_id'], transaction['vendor'], transaction['amount'], transaction['category_name'])
+    except RuntimeError as e:
+        print(e)
+        raise ValueError(f'Cannot update transaction')

@@ -59,4 +59,10 @@ USE bank;
 
 -- Select * from transactions where category_name ='Tax' and is_deleted='false' and user_id=1;
 -- select * from transactions where id=18 and is_deleted='false' and user_id=1;
-select * from category;
+
+select * from transactions;
+
+-- update transactions set vendor = 'Amazon', amount = 200, category_name = 'Fun' where id = 29;
+-- select * from transactions;
+
+-- update transactions set vendor = 'Amazon', amount = 100, category_name = 'Fun' where id = 29;
