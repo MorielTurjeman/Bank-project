@@ -38,6 +38,12 @@ def validate_input(vendor, amount, category_name):
             status_code=status.HTTP_400_BAD_REQUEST, detail="Category does not exist")
 
 
+def is_id_valid(id):
+    if not type(id) == int:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="id does not exist, must be numer")
+
+
 @router.post("/", status_code=201)
 async def add_transaction(request: Request):
     body = await request.json()
@@ -56,16 +62,21 @@ async def add_transaction(request: Request):
 
 @router.delete("/{id}", status_code=204)
 def delete_transaction(id):
-    user_id = get_connected_user()
     try:
-        transaction_service.delete_transaction(id, user_id)
+        is_id_valid(id)
     except RuntimeError as err:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                             detail=f"Unexpected server error, error={err}")
 
+    user_id = get_connected_user()
+    try:
+        transaction_service.delete_transaction(id, user_id)
     except ValueNotFoundError as err:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="id {id} not fount")
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"id {id} not fount ")
+    except RuntimeError as err:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail=f"Unexpected server error, error={err}")
 
 
 @router.get("/", status_code=201)
@@ -99,16 +110,22 @@ def get_transactions_by_category(category_name):
 
 
 @router.put("/{id}", status_code=201)
-async def update_transaction(request: Request):
+async def update_transaction(request: Request, id):
     body = await request.json()
     vendor = body.get('vendor')
     amount = body.get('amount')
     category_name = body.get('category_name')
+    if (id != body.get('id')):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST,
+                            detail="Bad request, mismatch in transaction id")
     user_id = get_connected_user()
 
     validate_input(vendor, amount, category_name)
     try:
         return (transaction_service.update_transaction(body))
+    except ValueNotFoundError as err:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Transaction not found")
     except RuntimeError as err:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Unexpected server error, error={err}")

@@ -25,3 +25,16 @@ def update_balance(user_id, transaction_amount):
     except RuntimeError as e:
         print(e)
         raise ValueError('Cannot update balance')
+
+
+def add_user(user: dict):
+    try:
+        connection.ping(reconnect=True)
+        with connection.cursor() as cursor:
+            new_user = f"insert into user(id, first_name, last_name, current_balance) values(null, '{user['first_name']}', '{user['last_name']}', 0)"
+            cursor.execute(new_user)
+            connection.commit()
+            return User(cursor.lastrowid, user['first_name'], user['last_name'], 0)
+    except RuntimeError as e:
+        print(e)
+        raise ValueError(f'Cannot create user')

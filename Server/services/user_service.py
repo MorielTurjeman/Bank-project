@@ -23,3 +23,6 @@ def update_balance(user_id, amount):
 
 # def update_balance(user_id, amount):
 #     user_data.update_balance(get_logged_in_user(), amount)
+
+def add_user(new_user: dict):
+    user_data.add_user(new_user)

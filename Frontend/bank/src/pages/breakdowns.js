@@ -18,7 +18,7 @@ function Breakdowns(props) {
             .then((data) => [headers, ...data.map(breakDown => [breakDown['category_name'], breakDown['amount_sum']])])
             .then(breakdowns => setBreakdowns(breakdowns))
             .catch((err) => {
-                console.error(err)
+                console.error("Could not get breadown information from server")
             })
     }
 

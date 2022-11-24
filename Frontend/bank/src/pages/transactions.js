@@ -20,7 +20,7 @@ function Transactions(props) {
                 .then(transactions => setTransactions(transactions))
                 .then(() => setShouldReload(false))
                 .catch((err) => {
-                    console.error(err)
+                    console.error("Could not get transactions from server")
                 })
         }
 

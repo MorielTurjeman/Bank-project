@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status, HTTPException, Request
 from exeptions.value_not_found_error import ValueNotFoundError
 from services import user_service
 
@@ -17,3 +17,12 @@ def get_balance(user_id):
     except ValueNotFoundError as err:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="id {id} not fount")
+
+
+# @router.post("/", status_code=201)
+# async def add_user(request: Request):
+#     body = await request.json()
+#     first_name = body.get('first_name')
+#     last_name = body.get('last_name')
+
+#     # validate user

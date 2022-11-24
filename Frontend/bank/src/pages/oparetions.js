@@ -29,7 +29,7 @@ function Oparetions(props) {
 
     useEffect(() => {
         CategoryApi.getCategories().then(categories => setCategories(categories)).catch((err) => {
-            console.error(err)
+            console.error("Error getting categories from server")
         })
     }, [])
 

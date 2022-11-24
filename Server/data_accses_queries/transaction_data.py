@@ -121,3 +121,20 @@ def update_transactions(transaction: dict):
     except RuntimeError as e:
         print(e)
         raise ValueError(f'Cannot update transaction')
+
+
+def sum_deposits_by_category(user_id):
+    try:
+        connection.ping(reconnect=True)
+        with connection.cursor() as cursor:
+            sum_query = f"select SUM(amount) as amount, category_name from transactions where is_deleted='false' and user_id={user_id} and amount > 0 group by category_name"
+            cursor.execute(sum_query)
+            results = cursor.fetchall()
+            transaction_breakdown: list[Transaction_Sum] = []
+            for result in results:
+                transaction_breakdown.append(Transaction_Sum(
+                    result['amount'], result['category_name']))
+            return transaction_breakdown
+    except RuntimeError as e:
+        print(e)
+        raise ValueError('Cannot get transactions sum')
